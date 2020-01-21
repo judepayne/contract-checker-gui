@@ -1,2 +1,7 @@
 # contract-checker-gui
-The front end for contract-checker
+
+The Front end to contract-checker
+
+## License
+
+MIT
