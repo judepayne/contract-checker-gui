@@ -89,8 +89,7 @@ a:hover {
   text-decoration: underline;
   cursor:pointer;
 }
-
-div.site-banner{
+.site-banner{
   font-family: 'Roboto Mono', monospace;
   font-weight: 600;
   font-size: 2.2em;
@@ -445,3 +444,25 @@ select {
 .cm-style1 { color: gray; }
 .cm-style2 { color: #0f53ff; }
 .cm-style3 { color: #c92f2c; }
+
+div.main{
+	display:inline-block;
+}
+
+#consumer-area{
+	text-align:center;
+	position:relative; 
+	left:70px;
+}
+
+#producer-area{
+	text-align:center;
+	position:relative; 
+	left:30px;
+}
+
+#compare-button{
+	position:relative;
+	top: 30px;
+	left: -400px;
+}

@@ -15,34 +15,32 @@ return [cljs.core.str.cljs$core$IFn$_invoke$arity$1(location.pathname),cljs.core
 if((typeof accountant !== 'undefined') && (typeof accountant.core !== 'undefined') && (typeof accountant.core.history !== 'undefined')){
 } else {
 accountant.core.history = (function (){var transformer = (new goog.history.Html5History.TokenTransformer());
-transformer.retrieveToken = accountant.core.transformer_retrieve_token;
+(transformer.retrieveToken = accountant.core.transformer_retrieve_token);
 
-transformer.createUrl = accountant.core.transformer_create_url;
+(transformer.createUrl = accountant.core.transformer_create_url);
 
 return (new goog.history.Html5History(window,transformer));
 })();
 }
 accountant.core.dispatch_on_navigate = (function accountant$core$dispatch_on_navigate(history,nav_handler){
-var G__35732 = history;
-var G__35733 = goog.history.EventType.NAVIGATE;
-var G__35734 = ((function (G__35732,G__35733){
-return (function (e){
+var G__36064 = history;
+var G__36065 = goog.history.EventType.NAVIGATE;
+var G__36066 = (function (e){
 var token = e.token;
 return (nav_handler.cljs$core$IFn$_invoke$arity$1 ? nav_handler.cljs$core$IFn$_invoke$arity$1(token) : nav_handler.call(null,token));
-});})(G__35732,G__35733))
-;
-return goog.events.listen(G__35732,G__35733,G__35734);
+});
+return goog.events.listen(G__36064,G__36065,G__36066);
 });
 /**
  * Given a DOM node, if it is an element node, return its href attribute.
  *   Otherwise, return nil.
  */
 accountant.core.get_href_attribute = (function accountant$core$get_href_attribute(node){
-if(cljs.core.truth_((function (){var and__4120__auto__ = node;
-if(cljs.core.truth_(and__4120__auto__)){
+if(cljs.core.truth_((function (){var and__4174__auto__ = node;
+if(cljs.core.truth_(and__4174__auto__)){
 return cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(node.nodeType,Node.ELEMENT_NODE);
 } else {
-return and__4120__auto__;
+return and__4174__auto__;
 }
 })())){
 return node.getAttribute("href");
@@ -60,26 +58,26 @@ accountant.core.find_href_node = (function accountant$core$find_href_node(e){
 while(true){
 var href = accountant.core.get_href_attribute(e);
 var attrs = e.attributes;
-var navigation_link_QMARK_ = (function (){var and__4120__auto__ = href;
-if(cljs.core.truth_(and__4120__auto__)){
-var and__4120__auto____$1 = attrs;
-if(cljs.core.truth_(and__4120__auto____$1)){
+var navigation_link_QMARK_ = (function (){var and__4174__auto__ = href;
+if(cljs.core.truth_(and__4174__auto__)){
+var and__4174__auto____$1 = attrs;
+if(cljs.core.truth_(and__4174__auto____$1)){
 return cljs.core.not((attrs["data-trigger"]));
 } else {
-return and__4120__auto____$1;
+return and__4174__auto____$1;
 }
 } else {
-return and__4120__auto__;
+return and__4174__auto__;
 }
 })();
 if(cljs.core.truth_(navigation_link_QMARK_)){
 return e;
 } else {
-var temp__5720__auto__ = e.parentNode;
-if(cljs.core.truth_(temp__5720__auto__)){
-var parent = temp__5720__auto__;
-var G__35774 = parent;
-e = G__35774;
+var temp__5735__auto__ = e.parentNode;
+if(cljs.core.truth_(temp__5735__auto__)){
+var parent = temp__5735__auto__;
+var G__36286 = parent;
+e = G__36286;
 continue;
 } else {
 return null;
@@ -108,27 +106,26 @@ return ["#",cljs.core.str.cljs$core$IFn$_invoke$arity$1(fragment)].join('');
  * Create a click handler that blocks page reloads for known routes
  */
 accountant.core.prevent_reload_on_known_path = (function accountant$core$prevent_reload_on_known_path(history,path_exists_QMARK_,reload_same_path_QMARK_){
-var G__35737 = document;
-var G__35738 = "click";
-var G__35739 = ((function (G__35737,G__35738){
-return (function (e){
+var G__36123 = document;
+var G__36124 = "click";
+var G__36125 = (function (e){
 var target = e.target;
 var button = e.button;
 var meta_key = e.metaKey;
 var alt_key = e.altKey;
 var ctrl_key = e.ctrlKey;
 var shift_key = e.shiftKey;
-var any_key = (function (){var or__4131__auto__ = meta_key;
-if(cljs.core.truth_(or__4131__auto__)){
-return or__4131__auto__;
+var any_key = (function (){var or__4185__auto__ = meta_key;
+if(cljs.core.truth_(or__4185__auto__)){
+return or__4185__auto__;
 } else {
-var or__4131__auto____$1 = alt_key;
-if(cljs.core.truth_(or__4131__auto____$1)){
-return or__4131__auto____$1;
+var or__4185__auto____$1 = alt_key;
+if(cljs.core.truth_(or__4185__auto____$1)){
+return or__4185__auto____$1;
 } else {
-var or__4131__auto____$2 = ctrl_key;
-if(cljs.core.truth_(or__4131__auto____$2)){
-return or__4131__auto____$2;
+var or__4185__auto____$2 = ctrl_key;
+if(cljs.core.truth_(or__4185__auto____$2)){
+return or__4185__auto____$2;
 } else {
 return shift_key;
 }
@@ -150,35 +147,27 @@ var current_host = window.location.hostname;
 var current_port = window.location.port;
 var loc = window.location;
 var current_relative_href = [cljs.core.str.cljs$core$IFn$_invoke$arity$1(loc.pathname),cljs.core.str.cljs$core$IFn$_invoke$arity$1(loc.search),cljs.core.str.cljs$core$IFn$_invoke$arity$1(loc.hash)].join('');
-if(cljs.core.truth_((function (){var and__4120__auto__ = cljs.core.not(any_key);
-if(and__4120__auto__){
-var and__4120__auto____$1 = (function (){var fexpr__35743 = new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 2, ["",null,"_self",null], null), null);
-return (fexpr__35743.cljs$core$IFn$_invoke$arity$1 ? fexpr__35743.cljs$core$IFn$_invoke$arity$1(link_target) : fexpr__35743.call(null,link_target));
+if(cljs.core.truth_(((cljs.core.not(any_key))?(function (){var and__4174__auto__ = (function (){var fexpr__36152 = new cljs.core.PersistentHashSet(null, new cljs.core.PersistentArrayMap(null, 2, ["",null,"_self",null], null), null);
+return (fexpr__36152.cljs$core$IFn$_invoke$arity$1 ? fexpr__36152.cljs$core$IFn$_invoke$arity$1(link_target) : fexpr__36152.call(null,link_target));
 })();
-if(cljs.core.truth_(and__4120__auto____$1)){
-var and__4120__auto____$2 = cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(button,(0));
-if(and__4120__auto____$2){
-var and__4120__auto____$3 = cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(host,current_host);
-if(and__4120__auto____$3){
-var and__4120__auto____$4 = ((cljs.core.not(port)) || (cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(cljs.core.str.cljs$core$IFn$_invoke$arity$1(port),cljs.core.str.cljs$core$IFn$_invoke$arity$1(current_port))));
-if(and__4120__auto____$4){
+if(cljs.core.truth_(and__4174__auto__)){
+if(cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(button,(0))){
+if(cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(host,current_host)){
+if(((cljs.core.not(port)) || (cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(cljs.core.str.cljs$core$IFn$_invoke$arity$1(port),cljs.core.str.cljs$core$IFn$_invoke$arity$1(current_port))))){
 return (path_exists_QMARK_.cljs$core$IFn$_invoke$arity$1 ? path_exists_QMARK_.cljs$core$IFn$_invoke$arity$1(path) : path_exists_QMARK_.call(null,path));
 } else {
-return and__4120__auto____$4;
+return false;
 }
 } else {
-return and__4120__auto____$3;
+return false;
 }
 } else {
-return and__4120__auto____$2;
+return false;
 }
 } else {
-return and__4120__auto____$1;
+return and__4174__auto__;
 }
-} else {
-return and__4120__auto__;
-}
-})())){
+})():false))){
 if(cljs.core.not_EQ_.cljs$core$IFn$_invoke$arity$2(current_relative_href,relative_href)){
 history.setToken(relative_href,title);
 } else {
@@ -187,18 +176,17 @@ history.setToken(relative_href,title);
 e.preventDefault();
 
 if(cljs.core.truth_(reload_same_path_QMARK_)){
-var G__35744 = history;
-var G__35745 = (new goog.history.Event(path,true));
-return goog.events.dispatchEvent(G__35744,G__35745);
+var G__36164 = history;
+var G__36165 = (new goog.history.Event(path,true));
+return goog.events.dispatchEvent(G__36164,G__36165);
 } else {
 return null;
 }
 } else {
 return null;
 }
-});})(G__35737,G__35738))
-;
-return goog.events.listen(G__35737,G__35738,G__35739);
+});
+return goog.events.listen(G__36123,G__36124,G__36125);
 });
 if((typeof accountant !== 'undefined') && (typeof accountant.core !== 'undefined') && (typeof accountant.core.nav_handler !== 'undefined')){
 } else {
@@ -225,25 +213,25 @@ accountant.core.navigate_listener_key = null;
  * 
  *   path-exists?: a fn of one argument, a path. Return truthy if this path is handled by the SPA
  */
-accountant.core.configure_navigation_BANG_ = (function accountant$core$configure_navigation_BANG_(p__35748){
-var map__35749 = p__35748;
-var map__35749__$1 = (((((!((map__35749 == null))))?(((((map__35749.cljs$lang$protocol_mask$partition0$ & (64))) || ((cljs.core.PROTOCOL_SENTINEL === map__35749.cljs$core$ISeq$))))?true:false):false))?cljs.core.apply.cljs$core$IFn$_invoke$arity$2(cljs.core.hash_map,map__35749):map__35749);
-var nav_handler = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__35749__$1,new cljs.core.Keyword(null,"nav-handler","nav-handler",2039495484));
-var path_exists_QMARK_ = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__35749__$1,new cljs.core.Keyword(null,"path-exists?","path-exists?",1473384514));
-var reload_same_path_QMARK_ = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__35749__$1,new cljs.core.Keyword(null,"reload-same-path?","reload-same-path?",1981904231));
+accountant.core.configure_navigation_BANG_ = (function accountant$core$configure_navigation_BANG_(p__36178){
+var map__36181 = p__36178;
+var map__36181__$1 = (((((!((map__36181 == null))))?(((((map__36181.cljs$lang$protocol_mask$partition0$ & (64))) || ((cljs.core.PROTOCOL_SENTINEL === map__36181.cljs$core$ISeq$))))?true:false):false))?cljs.core.apply.cljs$core$IFn$_invoke$arity$2(cljs.core.hash_map,map__36181):map__36181);
+var nav_handler = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__36181__$1,new cljs.core.Keyword(null,"nav-handler","nav-handler",2039495484));
+var path_exists_QMARK_ = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__36181__$1,new cljs.core.Keyword(null,"path-exists?","path-exists?",1473384514));
+var reload_same_path_QMARK_ = cljs.core.get.cljs$core$IFn$_invoke$arity$2(map__36181__$1,new cljs.core.Keyword(null,"reload-same-path?","reload-same-path?",1981904231));
 accountant.core.history.setUseFragment(false);
 
 accountant.core.history.setPathPrefix("");
 
 accountant.core.history.setEnabled(true);
 
-accountant.core.nav_handler = nav_handler;
+(accountant.core.nav_handler = nav_handler);
 
-accountant.core.path_exists_QMARK_ = path_exists_QMARK_;
+(accountant.core.path_exists_QMARK_ = path_exists_QMARK_);
 
-accountant.core.document_click_handler_listener_key = accountant.core.dispatch_on_navigate(accountant.core.history,nav_handler);
+(accountant.core.document_click_handler_listener_key = accountant.core.dispatch_on_navigate(accountant.core.history,nav_handler));
 
-return accountant.core.navigate_listener_key = accountant.core.prevent_reload_on_known_path(accountant.core.history,path_exists_QMARK_,reload_same_path_QMARK_);
+return (accountant.core.navigate_listener_key = accountant.core.prevent_reload_on_known_path(accountant.core.history,path_exists_QMARK_,reload_same_path_QMARK_));
 });
 /**
  * Teardown HTML5 history navigation.
@@ -252,63 +240,63 @@ return accountant.core.navigate_listener_key = accountant.core.prevent_reload_on
  *   the call to `configure-navigation!`.
  */
 accountant.core.unconfigure_navigation_BANG_ = (function accountant$core$unconfigure_navigation_BANG_(){
-accountant.core.nav_handler = null;
+(accountant.core.nav_handler = null);
 
-accountant.core.path_exists_QMARK_ = null;
+(accountant.core.path_exists_QMARK_ = null);
 
-var seq__35753 = cljs.core.seq(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [accountant.core.document_click_handler_listener_key,accountant.core.navigate_listener_key], null));
-var chunk__35754 = null;
-var count__35755 = (0);
-var i__35756 = (0);
+var seq__36249 = cljs.core.seq(new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [accountant.core.document_click_handler_listener_key,accountant.core.navigate_listener_key], null));
+var chunk__36250 = null;
+var count__36251 = (0);
+var i__36252 = (0);
 while(true){
-if((i__35756 < count__35755)){
-var key = chunk__35754.cljs$core$IIndexed$_nth$arity$2(null,i__35756);
+if((i__36252 < count__36251)){
+var key = chunk__36250.cljs$core$IIndexed$_nth$arity$2(null,i__36252);
 if(cljs.core.truth_(key)){
 goog.events.unlistenByKey(key);
 } else {
 }
 
 
-var G__35781 = seq__35753;
-var G__35782 = chunk__35754;
-var G__35783 = count__35755;
-var G__35784 = (i__35756 + (1));
-seq__35753 = G__35781;
-chunk__35754 = G__35782;
-count__35755 = G__35783;
-i__35756 = G__35784;
+var G__36313 = seq__36249;
+var G__36314 = chunk__36250;
+var G__36315 = count__36251;
+var G__36316 = (i__36252 + (1));
+seq__36249 = G__36313;
+chunk__36250 = G__36314;
+count__36251 = G__36315;
+i__36252 = G__36316;
 continue;
 } else {
-var temp__5720__auto__ = cljs.core.seq(seq__35753);
-if(temp__5720__auto__){
-var seq__35753__$1 = temp__5720__auto__;
-if(cljs.core.chunked_seq_QMARK_(seq__35753__$1)){
-var c__4550__auto__ = cljs.core.chunk_first(seq__35753__$1);
-var G__35787 = cljs.core.chunk_rest(seq__35753__$1);
-var G__35788 = c__4550__auto__;
-var G__35789 = cljs.core.count(c__4550__auto__);
-var G__35790 = (0);
-seq__35753 = G__35787;
-chunk__35754 = G__35788;
-count__35755 = G__35789;
-i__35756 = G__35790;
+var temp__5735__auto__ = cljs.core.seq(seq__36249);
+if(temp__5735__auto__){
+var seq__36249__$1 = temp__5735__auto__;
+if(cljs.core.chunked_seq_QMARK_(seq__36249__$1)){
+var c__4609__auto__ = cljs.core.chunk_first(seq__36249__$1);
+var G__36353 = cljs.core.chunk_rest(seq__36249__$1);
+var G__36354 = c__4609__auto__;
+var G__36355 = cljs.core.count(c__4609__auto__);
+var G__36356 = (0);
+seq__36249 = G__36353;
+chunk__36250 = G__36354;
+count__36251 = G__36355;
+i__36252 = G__36356;
 continue;
 } else {
-var key = cljs.core.first(seq__35753__$1);
+var key = cljs.core.first(seq__36249__$1);
 if(cljs.core.truth_(key)){
 goog.events.unlistenByKey(key);
 } else {
 }
 
 
-var G__35791 = cljs.core.next(seq__35753__$1);
-var G__35792 = null;
-var G__35793 = (0);
-var G__35794 = (0);
-seq__35753 = G__35791;
-chunk__35754 = G__35792;
-count__35755 = G__35793;
-i__35756 = G__35794;
+var G__36361 = cljs.core.next(seq__36249__$1);
+var G__36362 = null;
+var G__36363 = (0);
+var G__36364 = (0);
+seq__36249 = G__36361;
+chunk__36250 = G__36362;
+count__36251 = G__36363;
+i__36252 = G__36364;
 continue;
 }
 } else {
@@ -319,23 +307,21 @@ break;
 }
 });
 accountant.core.map__GT_params = (function accountant$core$map__GT_params(query){
-var params = cljs.core.map.cljs$core$IFn$_invoke$arity$2((function (p1__35761_SHARP_){
-return cljs.core.name(p1__35761_SHARP_);
+var params = cljs.core.map.cljs$core$IFn$_invoke$arity$2((function (p1__36256_SHARP_){
+return cljs.core.name(p1__36256_SHARP_);
 }),cljs.core.keys(query));
 var values = cljs.core.vals(query);
 var pairs = cljs.core.partition.cljs$core$IFn$_invoke$arity$2((2),cljs.core.interleave.cljs$core$IFn$_invoke$arity$2(params,values));
-return clojure.string.join.cljs$core$IFn$_invoke$arity$2("&",cljs.core.map.cljs$core$IFn$_invoke$arity$2(((function (params,values,pairs){
-return (function (p1__35762_SHARP_){
-return clojure.string.join.cljs$core$IFn$_invoke$arity$2("=",p1__35762_SHARP_);
-});})(params,values,pairs))
-,pairs));
+return clojure.string.join.cljs$core$IFn$_invoke$arity$2("&",cljs.core.map.cljs$core$IFn$_invoke$arity$2((function (p1__36257_SHARP_){
+return clojure.string.join.cljs$core$IFn$_invoke$arity$2("=",p1__36257_SHARP_);
+}),pairs));
 });
 /**
  * add a browser history entry. updates window/location
  */
 accountant.core.navigate_BANG_ = (function accountant$core$navigate_BANG_(var_args){
-var G__35768 = arguments.length;
-switch (G__35768) {
+var G__36259 = arguments.length;
+switch (G__36259) {
 case 1:
 return accountant.core.navigate_BANG_.cljs$core$IFn$_invoke$arity$1((arguments[(0)]));
 
@@ -350,24 +336,22 @@ throw (new Error(["Invalid arity: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(
 }
 });
 
-accountant.core.navigate_BANG_.cljs$core$IFn$_invoke$arity$1 = (function (route){
+(accountant.core.navigate_BANG_.cljs$core$IFn$_invoke$arity$1 = (function (route){
 return accountant.core.navigate_BANG_.cljs$core$IFn$_invoke$arity$2(route,cljs.core.PersistentArrayMap.EMPTY);
-});
+}));
 
-accountant.core.navigate_BANG_.cljs$core$IFn$_invoke$arity$2 = (function (route,query){
+(accountant.core.navigate_BANG_.cljs$core$IFn$_invoke$arity$2 = (function (route,query){
 if(cljs.core.truth_(accountant.core.nav_handler)){
 var token = accountant.core.history.getToken();
 var old_route = cljs.core.first(clojure.string.split.cljs$core$IFn$_invoke$arity$2(token,"?"));
-var query_string = accountant.core.map__GT_params(cljs.core.reduce_kv(((function (token,old_route){
-return (function (valid,k,v){
+var query_string = accountant.core.map__GT_params(cljs.core.reduce_kv((function (valid,k,v){
 if(cljs.core.truth_(v)){
 return cljs.core.assoc.cljs$core$IFn$_invoke$arity$3(valid,k,v);
 } else {
 return valid;
 }
-});})(token,old_route))
-,cljs.core.PersistentArrayMap.EMPTY,query));
-var with_params = ((cljs.core.empty_QMARK_(query_string))?route:[cljs.core.str.cljs$core$IFn$_invoke$arity$1(route),"?",cljs.core.str.cljs$core$IFn$_invoke$arity$1(query_string)].join(''));
+}),cljs.core.PersistentArrayMap.EMPTY,query));
+var with_params = ((cljs.core.empty_QMARK_(query_string))?route:[cljs.core.str.cljs$core$IFn$_invoke$arity$1(route),"?",query_string].join(''));
 if(cljs.core._EQ_.cljs$core$IFn$_invoke$arity$2(old_route,route)){
 return accountant.core.history.replaceToken(with_params);
 } else {
@@ -376,9 +360,9 @@ return accountant.core.history.setToken(with_params);
 } else {
 return console.error("can't navigate! until configure-navigation! called");
 }
-});
+}));
 
-accountant.core.navigate_BANG_.cljs$lang$maxFixedArity = 2;
+(accountant.core.navigate_BANG_.cljs$lang$maxFixedArity = 2);
 
 accountant.core.dispatch_current_BANG_ = (function accountant$core$dispatch_current_BANG_(){
 
@@ -386,8 +370,8 @@ var path = window.location.pathname;
 var query = window.location.search;
 var hash = window.location.hash;
 if(cljs.core.truth_(accountant.core.nav_handler)){
-var G__35773 = [cljs.core.str.cljs$core$IFn$_invoke$arity$1(path),cljs.core.str.cljs$core$IFn$_invoke$arity$1(query),cljs.core.str.cljs$core$IFn$_invoke$arity$1(hash)].join('');
-return (accountant.core.nav_handler.cljs$core$IFn$_invoke$arity$1 ? accountant.core.nav_handler.cljs$core$IFn$_invoke$arity$1(G__35773) : accountant.core.nav_handler.call(null,G__35773));
+var G__36270 = [cljs.core.str.cljs$core$IFn$_invoke$arity$1(path),cljs.core.str.cljs$core$IFn$_invoke$arity$1(query),cljs.core.str.cljs$core$IFn$_invoke$arity$1(hash)].join('');
+return (accountant.core.nav_handler.cljs$core$IFn$_invoke$arity$1 ? accountant.core.nav_handler.cljs$core$IFn$_invoke$arity$1(G__36270) : accountant.core.nav_handler.call(null,G__36270));
 } else {
 return console.error("can't dispatch-current until configure-navigation! called");
 }
