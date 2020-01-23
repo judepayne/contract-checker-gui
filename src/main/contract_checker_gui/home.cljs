@@ -6,7 +6,7 @@
    [kvlt.core                :as kvlt]
    [promesa.core             :as p]
    [promesa.async-cljs       :refer-macros [async]]
-   [goog.dom                 :as dom]
+   [goog.dom                 :as dom] 
    [clojure.pprint           :as pp]))
 
 
@@ -92,26 +92,35 @@
    "Compare Contracts"])
 
 
+(defn table-errors [errs]
+  [:table
+   [:thead
+    [:tr
+     [:th "Error No."]
+     [:th "Error Rule"]
+     [:th "Severity"]
+     [:th "Path"]]]
+   [:tbody
+    (for [err errs]
+      [:tr
+       [:td]
+       [:td (:rule err)]
+       [:td (:severity err)]
+       [:td (:path err)]])]])
+
+
 (defn display-errors [state]
-  [:textarea.display-error
-   {
-    :rows 12
-    :columns 90
-    :value @errors-str
-    }]
-)
+  (let [errors (:errors (:errors @state))]
+    [table-errors errors]))
 
 
 (defn home-page []
   [:div.page
 ;   @local-state
-   [:div.main
+   [:div.wrapper
     [producer-area local-state]
     [consumer-area local-state]
     [compare-button]
     [display-errors local-state]
-    ;[:p  :errors @local-state]
-    ;[:p "Debug: @local-state"]
     ]
-    ;(:errors @local-state)
      ])

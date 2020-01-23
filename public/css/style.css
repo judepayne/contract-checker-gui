@@ -117,6 +117,7 @@ p{
   display: grid;
   grid-template-columns: 50% 50%;
   grid-template-rows: 300px 300px 60px 300px auto;
+  counter-reset: Count-Value;   
 }
 
 .producer-area{
@@ -143,4 +144,17 @@ p{
   grid-column: 1 / 3;
   grid-row: 4 / 5;
 }
+table
+{
+    border-collapse: collapse;
+}
+tr td:first-child:before
+{
+  counter-increment: Count-Value;   
+  content: counter(Count-Value);
+}
+table, th, td {
+  border: 1px solid black;
+}
+
 }
