@@ -21,26 +21,6 @@
     :svg "<div />"
     :errors ""}))
 
-
-
-(defn producer-area [state]
-  [:textarea
-     {:id "producer-area"
-      :placeholder "Paste the producer schema here"
-      :value (:producer-schema @state)
-      :rows 12
-      :cols 50
-      :on-change #(swap! state assoc :producer-schema (-> % .-target .-value) )}])
-
-(defn consumer-area [state]
-  [:textarea
-     {:id "consumer-area"
-      :placeholder "Paste the consumer schema here"
-      :value (:consumer-schema @state)
-      :rows 12
-      :cols 50
-      :on-change #(swap! state assoc :consumer-schema (-> % .-target .-value) )}])
-
 (def aws-url "https://8ty9wnwd19.execute-api.eu-west-2.amazonaws.com/beta")
 
 (defn json-data [] (str "{\"consumer\": " 
@@ -84,14 +64,35 @@
        (p/error (fn [error] (put-result (.-message error))))))
 
 
+(defn producer-area [state]
+  [:textarea
+     {:id "producer-area"
+      :placeholder "Paste the producer schema here"
+      :value (:producer-schema @state)
+      :rows 12
+      :cols 50
+      :on-change #(swap! state assoc :producer-schema (-> % .-target .-value) )}])
+
+(defn consumer-area [state]
+  [:textarea
+     {:id "consumer-area"
+      :placeholder "Paste the consumer schema here"
+      :value (:consumer-schema @state)
+      :rows 12
+      :cols 50
+      :on-change #(swap! state assoc :consumer-schema (-> % .-target .-value) )}])
+
+
 (defn compare-button []
   [:button {:id "compare-button" 
             :onClick compare-contract}
    "Compare Contracts"])
 
 
-(defn display-errors []
-  (fn [] [:p @local-state]))
+(defn display-errors [state]
+  [:p  :errors @state
+                                        ;:on-change #(swap! state assoc :errors (-> % .-target .-value))
+])
 
 
 (defn home-page []
@@ -101,7 +102,9 @@
     [producer-area local-state]
     [consumer-area local-state]
     [compare-button]
-    [display-errors]
-    [:p "Debug: @local-state"]]
-    (:errors @local-state)
+    [display-errors local-state]
+    ;[:p  :errors @local-state]
+    ;[:p "Debug: @local-state"]
+    ]
+    ;(:errors @local-state)
      ])
