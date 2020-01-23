@@ -105,7 +105,7 @@
 (defn home-page []
   [:div.page
 ;   @local-state
-   [:div.main
+   [:div.wrapper
     [producer-area local-state]
     [consumer-area local-state]
     [compare-button]
