@@ -103,6 +103,27 @@ p{
   font-size: 1em;
 }
 
+button {
+/  float: right;
+/  width: 80px;
+  outline: none;
+  background-color: #ddd;
+  border-radius: 4px;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 14px;
+  border: none;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+button:hover {
+  background-color: #bbb;
+}
+button:active {
+  transform: translateY(4px);
+}
+
+
 .wrapper {
   height: 100%;
   width: 98%;

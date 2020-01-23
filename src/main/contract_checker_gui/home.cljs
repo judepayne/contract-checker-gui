@@ -89,7 +89,7 @@
 (defn compare-button []
   [:button {:id "compare-button" 
             :onClick compare-contract}
-   "Compare Contracts"])
+   "Compare"])
 
 
 (defn display-errors [state]
@@ -104,11 +104,10 @@
 
 (defn home-page []
   [:div.page
-;   @local-state
+   [compare-button]
    [:div.wrapper
     [producer-area local-state]
     [consumer-area local-state]
-    [compare-button]
     [display-errors local-state]
     ;[:p  :errors @local-state]
     ;[:p "Debug: @local-state"]
