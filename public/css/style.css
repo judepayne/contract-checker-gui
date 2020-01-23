@@ -67,7 +67,13 @@ textarea {
   resize: none;
 }
 textarea::placeholder {
-  font-size: 1.3em;;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.3em;
+}
+textarea:focus {
+    outline: none !important;
+    border: 1px solid #bbb;
+    box-shadow: 0 0 5px #bbc;
 }
 
 pre{
@@ -81,10 +87,10 @@ pre{
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
-code {
-  margin-top: 3em;
-  margin-bottom: 3em;
-  background-color: #fafafa;
+.code {
+  background-color: #fdfdfd;
+  line-height: 1.2;
+  font-family: "Courier New", Courier, monospace;
 }
 
 footer{
@@ -135,7 +141,7 @@ p{
 .wrapper {
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-template-rows: 300px 30px 300px auto;
+  grid-template-rows: 350px 30px 300px auto;
 }
 
 .producer-area{

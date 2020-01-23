@@ -68,7 +68,7 @@
 
 
 (defn producer-area [state]
-  [:textarea
+  [:textarea.code
      {:id "producer-area"
       :placeholder "Paste the producer schema here"
       :value (:producer-schema @state)
@@ -77,7 +77,7 @@
       :on-change #(swap! state assoc :producer-schema (-> % .-target .-value) )}])
 
 (defn consumer-area [state]
-  [:textarea
+  [:textarea.code
      {:id "consumer-area"
       :placeholder "Paste the consumer schema here"
       :value (:consumer-schema @state)
