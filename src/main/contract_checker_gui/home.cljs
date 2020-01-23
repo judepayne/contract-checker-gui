@@ -6,7 +6,8 @@
    [kvlt.core                :as kvlt]
    [promesa.core             :as p]
    [promesa.async-cljs       :refer-macros [async]]
-   [goog.dom                 :as dom]))
+   [goog.dom                 :as dom]
+   [clojure.pprint           :as pp]))
 
 
 ;; Useful for debugging into the Chrome console.
@@ -19,7 +20,10 @@
    {:producer-schema ""
     :consumer-schema ""
     :svg "<div />"
-    :errors ""}))
+    :errors nil}))
+
+(def errors-str (reaction (str (:errors @local-state))))
+
 
 (def aws-url "https://8ty9wnwd19.execute-api.eu-west-2.amazonaws.com/beta")
 
@@ -37,7 +41,6 @@
 
 (defn json->clj
   [ds]
-  (log ds)
   (js->clj (.parse js/JSON ds) :keywordize-keys true))
 
 
@@ -53,7 +56,7 @@
 
 
 (defn put-result [result]
-  (log result)
+  (log (count ( :errors result)))
   (swap! local-state assoc :errors result))
 
 
@@ -90,9 +93,13 @@
 
 
 (defn display-errors [state]
-  [:p  :errors @state
-                                        ;:on-change #(swap! state assoc :errors (-> % .-target .-value))
-])
+  [:textarea.display-error
+   {
+    :rows 12
+    :columns 90
+    :value @errors-str
+    }]
+)
 
 
 (defn home-page []

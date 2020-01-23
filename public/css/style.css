@@ -453,16 +453,24 @@ div.main{
 	text-align:center;
 	position:relative; 
 	left:70px;
+	width: 300px;
 }
 
 #producer-area{
 	text-align:center;
 	position:relative; 
 	left:30px;
+	width: 300px;
 }
 
 #compare-button{
 	position:relative;
-	top: 30px;
-	left: -400px;
+	top: 50px;
+	left: -200px;
 }
+
+.display-error{
+	text-align:center;
+	position:relative; 
+	left:-20px;
+	width: 300px;
