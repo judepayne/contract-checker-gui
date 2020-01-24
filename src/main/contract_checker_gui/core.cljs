@@ -19,7 +19,6 @@
 (defn current-page []
   [:div.core
    [:header]
-   [:div.site-banner "Contract Checker"]
    [page]
    [:footer
     [:p

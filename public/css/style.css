@@ -52,7 +52,7 @@ a {
   color: #09f;
 }
 
-div.site-banner{
+.site-banner{
   font-family: 'Roboto Mono', monospace;
   font-weight: 600;
   font-size: 2.0em;
@@ -61,12 +61,15 @@ div.site-banner{
 }
 
 textarea {
+  font-family: "Courier New", Courier, monospace;
+  color: #000030;
+  line-height: 1.5;
+  background-color: #fefefe;
   border-width: 1px;
   border-color: #eee;
   font-size: 0.8em;
   resize: none;
 }
-
 textarea::placeholder {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1.3em;
@@ -105,8 +108,7 @@ p{
 }
 
 button {
-/  float: right;
-/  width: 80px;
+  float: right;
   outline: none;
   background-color: #ddd;
   border-radius: 4px;
@@ -124,85 +126,95 @@ button:active {
   transform: translateY(4px);
 }
 
+.tech-error {
+  color: #c22;
+  font-size: 0.7em;
+}
 
 .wrapper {
   height: 100%;
   width: 98%;
   display: grid;
   grid-template-columns: 100%;
-  grid-template-rows: 300px 300px 40px 300px auto;
+  grid-template-rows: 50px 40px 350px 350px 40px 300px auto;
   grid-gap: 6px
 }
 
-.producer-area{
+.bnr {
   grid-column: 1 / 2;
   grid-row: 1 / 2;
 }
 
+.btn {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+}
+
+.producer-area{
+  grid-column: 1 / 2;
+  grid-row: 3 / 4;
+}
+
 .consumer-area{
  grid-column: 1 / 2;
- grid-row: 2 / 3;
+ grid-row: 4 / 5;
 }
 
 .buffer-area{
  grid-column: 1 / 2;
- grid-row: 3 / 4;
+ grid-row: 5 / 6;
 }
 
 .display-error {
   grid-column: 1 / 2;
-  grid-row: 4/ 5;
+  grid-row: 6 / 7;
 }
 
 .display-svg {
   grid-column: 1 / 2;
-  grid-row: 5 / 6;
+  grid-row: 7 / 8;
 }
 
 @media only screen and (min-width: 768px) {
 .wrapper {
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-template-rows: 300px 300px 60px 300px auto;
-  counter-reset: Count-Value;   
-  grid-template-rows: 350px 30px 300px auto;
+  grid-template-rows: 60px 400px 30px 300px auto;
 }
 
-.producer-area{
+.bnr {
   grid-column: 1 / 2;
   grid-row: 1 / 2;
 }
 
+.btn {
+  float: right;
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+}
+
+.producer-area{
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+}
+
 .consumer-area{
  grid-column: 2 / 3;
- grid-row: 1 / 2;
+ grid-row: 2 / 3;
 }
 
 .buffer-area{
- grid-column: 1 / 2;
- grid-row: 2 / 3;
+ grid-column: 1 / 3;
+ grid-row: 3 / 4;
 }
 
 .display-error {
   grid-column: 1 / 3;
-  grid-row: 3 / 4;
+  grid-row: 4 / 5;
 }
 
 .display-svg {
   grid-column: 1 / 3;
-  grid-row: 4 / 5;
+  grid-row: 5 / 6;
 }
-table
-{
-    border-collapse: collapse;
-}
-tr td:first-child:before
-{
-  counter-increment: Count-Value;   
-  content: counter(Count-Value);
-}
-table, th, td {
-  border: 1px solid black;
-}
-
 }
