@@ -87,9 +87,10 @@
 
 
 (defn compare-button []
-  [:button {:id "compare-button" 
-            :onClick compare-contract}
-   "Compare Contracts"])
+  [:button
+   {:id "compare-button" 
+    :onClick compare-contract}
+   "Compare"])
 
 
 (defn table-errors [errs]
@@ -116,11 +117,11 @@
 
 (defn home-page []
   [:div.page
-;   @local-state
    [:div.wrapper
+    [:div.site-banner.bnr "Contract checker"]
+    [:div.btn [compare-button]]
     [producer-area local-state]
     [consumer-area local-state]
-    [compare-button]
-    [display-errors local-state]
-    ]
-     ])
+    [:div.buffer-area.tech-error "@gunjan: technical errors: json validation, lambda problems will go here. area will collapse/ expand as needed. do monday (or example on reagent website + in draw-graph)"]
+    [:div.display-error [display-errors local-state]]
+    ]])
