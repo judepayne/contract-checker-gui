@@ -52,6 +52,31 @@ a {
   color: #09f;
 }
 
+div.site-banner{
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 600;
+  font-size: 2.0em;
+  padding: 6px 0px 26px 0px;
+  color: #667;
+}
+
+textarea {
+  border-width: 1px;
+  border-color: #eee;
+  font-size: 0.8em;
+  resize: none;
+}
+
+textarea::placeholder {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.3em;
+}
+textarea:focus {
+    outline: none !important;
+    border: 1px solid #bbb;
+    box-shadow: 0 0 5px #bbc;
+}
+
 pre{
   margin-left: 2em;
   font-size: 1em;
@@ -63,10 +88,10 @@ pre{
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
-code {
-  margin-top: 3em;
-  margin-bottom: 3em;
-  background-color: #fafafa;
+.code {
+  background-color: #fdfdfd;
+  line-height: 1.2;
+  font-family: "Courier New", Courier, monospace;
 }
 
 footer{
@@ -76,15 +101,37 @@ footer{
 
 p{
   margin-block-start: 0em;
+  font-size: 1em;
 }
+
+button {
+/  float: right;
+/  width: 80px;
+  outline: none;
+  background-color: #ddd;
+  border-radius: 4px;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 14px;
+  border: none;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+button:hover {
+  background-color: #bbb;
+}
+button:active {
+  transform: translateY(4px);
+}
+
 
 .wrapper {
   height: 100%;
   width: 98%;
   display: grid;
   grid-template-columns: 100%;
-  grid-template-rows: 300px 300px 60px 300px auto;
-  grid-gap: 3px
+  grid-template-rows: 300px 300px 40px 300px auto;
+  grid-gap: 6px
 }
 
 .producer-area{
@@ -118,6 +165,7 @@ p{
   grid-template-columns: 50% 50%;
   grid-template-rows: 300px 300px 60px 300px auto;
   counter-reset: Count-Value;   
+  grid-template-rows: 350px 30px 300px auto;
 }
 
 .producer-area{
