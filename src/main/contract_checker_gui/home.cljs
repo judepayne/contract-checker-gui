@@ -92,7 +92,7 @@
    "Compare Contracts"])
 
 
-(defn table-errors [errs]
+(defn Table-errors [errs]
   [:table
    [:thead
     [:tr
@@ -111,7 +111,7 @@
 
 (defn display-errors [state]
   (let [errors (:errors (:errors @state))]
-    [table-errors errors]))
+    [Table-errors errors]))
 
 
 (defn home-page []
