@@ -131,6 +131,33 @@ button:active {
   font-size: 0.7em;
 }
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.8em;
+  color: #555;
+}
+
+th, td {
+  text-align: left;
+}
+
+th {
+  height: 40px;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+td {
+  padding: 5px 10px;
+}
+
+table, th, td {
+
+}
+
+tr:nth-child(even) {background-color: #fafafa;}
+
 .wrapper {
   height: 100%;
   width: 98%;
@@ -221,9 +248,6 @@ table {
   border-collapse: collapse;
 }
 
-table, th, td {
-  border: 1px solid black;
-}
 tr td:first-child:before
 {
   counter-increment: Count-Value;   
