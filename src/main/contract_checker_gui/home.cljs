@@ -94,6 +94,7 @@
 
 
 (defn Table-errors [errs]
+  (log (pr-str errs))
   [:table
    [:thead
     [:tr
@@ -107,11 +108,12 @@
        [:td]
        [:td (:rule err)]
        [:td (:severity err)]
-       [:td (:path err)]])]])
+       [:td (clojure.string/join "\\" (:path err))]
+       ])]])
 
 
 (defn display-errors [state]
-  (let [errors (:errors (:errors @state))]
+   (let [errors (:errors (:errors @state))]
     [Table-errors errors]))
 
 
