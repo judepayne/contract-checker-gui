@@ -106,9 +106,9 @@
     (for [err errs]
       [:tr
        [:td]
-       [:td (:rule err)]
-       [:td (:severity err)]
-       [:td (clojure.string/join "\\" (:path err))]
+       ^{:key (:rule err)} [:td (:rule err)]
+       ^{:key (:severity err)} [:td (:severity err)]
+       ^{:key (:path err)} [:td (clojure.string/join "\\" (:path err))]
        ])]])
 
 
