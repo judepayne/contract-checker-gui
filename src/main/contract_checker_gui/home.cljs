@@ -82,6 +82,16 @@
   (swap! local-state assoc :errors result))
 
 
+(defn check-for-error [result]
+  (if (:err result)
+    (throw (js/Error. (:err result)))
+    result))
+
+
+(defn put-error [err]
+  (swap! local-state assoc-in [:sys-err :lambda-err] err))
+
+
 (defn schema-error [schema]
   (case schema
     :consumer (swap! local-state assoc-in [:sys-err :consumer-schema-err]
@@ -103,10 +113,10 @@
       (do
         (clear-errors)
         (->> (post checker-url (json-data))
-             (p/map logger)
              (p/map json->clj)
+             (p/map check-for-error)
              (p/map put-result)
-             (p/error (fn [error] (put-result (.-message error))))))
+             (p/error (fn [error] (put-error (.-message error))))))
       (do
         (if (nil? ps) (schema-error :producer))
         (if (nil? cs) (schema-error :consumer))))))
@@ -166,7 +176,7 @@
   [:div.buffer-area.tech-error
    (str (-> @local-state :sys-err :producer-schema-err) "  "
         (-> @local-state :sys-err :consumer-schema-err) "  "
-        (-> @local-state :sys-err :lambda-schema-err))])
+        (-> @local-state :sys-err :lambda-err))])
 
 
 (defn home-page []
@@ -177,5 +187,4 @@
     [producer-area local-state]
     [consumer-area local-state]
     [sys-errors local-state]
-    [:div.display-error [display-errors local-state]]
-    ]])
+    [:div.display-error [display-errors local-state]]]])
