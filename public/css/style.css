@@ -247,12 +247,3 @@ tr:nth-child(even) {background-color: #fafafa;}
 table {
   border-collapse: collapse;
 }
-
-tr td:first-child:before
-{
-  counter-increment: Count-Value;   
-  content: counter(Count-Value);
-}
-.page{
-	counter-reset: Count-Value; 
-}

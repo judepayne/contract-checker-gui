@@ -9,6 +9,11 @@
    [goog.dom                 :as dom] 
    [clojure.pprint           :as pp]))
 
+;; Config section - hard codings!
+
+(def checker-url "https://8ty9wnwd19.execute-api.eu-west-2.amazonaws.com/beta")
+(def visualize-url "https://8ty9wnwd19.execute-api.eu-west-2.amazonaws.com/beta")
+
 
 ;; Useful for debugging into the Chrome console.
 (def log (.-log js/console))
@@ -20,12 +25,16 @@
    {:producer-schema ""
     :consumer-schema ""
     :svg "<div />"
-    :errors nil}))
+    :errors nil
+    :sys-err {:producer-schema-err ""
+              :consumer-schema-err ""
+              :lambda-err ""}}))
 
 (def errors-str (reaction (str (:errors @local-state))))
 
 
-(def aws-url "https://8ty9wnwd19.execute-api.eu-west-2.amazonaws.com/beta")
+(def error-paths (reaction (map :path (-> @local-state :errors :errors))))
+
 
 (defn json-data [] (str "{\"consumer\": " 
                           (:consumer-schema @local-state)
@@ -44,6 +53,20 @@
   (js->clj (.parse js/JSON ds) :keywordize-keys true))
 
 
+(defn logger [res]
+  (log res)
+  res)
+
+
+(defn parse-json
+  [js]
+  (try
+    (let [parsed (json->clj js)]
+      parsed)
+    (catch :default e
+      nil)))
+
+
 (defn post [url json-data]
   (p/alet [{:keys [status body]}
               (p/await (p/catch (kvlt/request! {:url url
@@ -56,15 +79,37 @@
 
 
 (defn put-result [result]
-  (log (count ( :errors result)))
   (swap! local-state assoc :errors result))
 
 
+(defn schema-error [schema]
+  (case schema
+    :consumer (swap! local-state assoc-in [:sys-err :consumer-schema-err]
+                     "Consumer schema is not valid json!")
+    :producer (swap! local-state assoc-in [:sys-err :producer-schema-err]
+                     "Producer schema is not valid json!")))
+
+
+(defn clear-errors []
+  (swap! local-state assoc-in [:sys-err :consumer-schema-err] "")
+  (swap! local-state assoc-in [:sys-err :producer-schema-err] "")
+  (swap! local-state assoc-in [:sys-err :lambda-err] ""))
+
+
 (defn compare-contract []
-  (->> (post aws-url (json-data))
-       (p/map json->clj)
-       (p/map put-result)
-       (p/error (fn [error] (put-result (.-message error))))))
+  (let [cs (parse-json (:consumer-schema @local-state))
+        ps (parse-json (:producer-schema @local-state))]
+    (if (and (not (nil? cs)) (not (nil? ps)))
+      (do
+        (clear-errors)
+        (->> (post checker-url (json-data))
+             (p/map logger)
+             (p/map json->clj)
+             (p/map put-result)
+             (p/error (fn [error] (put-result (.-message error))))))
+      (do
+        (if (nil? ps) (schema-error :producer))
+        (if (nil? cs) (schema-error :consumer))))))
 
 
 (defn producer-area [state]
@@ -75,6 +120,7 @@
       :rows 12
       :cols 50
       :on-change #(swap! state assoc :producer-schema (-> % .-target .-value) )}])
+
 
 (defn consumer-area [state]
   [:textarea
@@ -93,8 +139,7 @@
    "Compare"])
 
 
-(defn Table-errors [errs]
-  (log (pr-str errs))
+(defn table-errors [errs]
   [:table
    [:thead
     [:tr
@@ -103,18 +148,25 @@
      [:th "Severity"]
      [:th "Path"]]]
    [:tbody
-    (for [err errs]
-      [:tr
-       [:td]
-       ^{:key (:rule err)} [:td (:rule err)]
-       ^{:key (:severity err)} [:td (:severity err)]
-       ^{:key (:path err)} [:td (clojure.string/join "\\" (:path err))]
-       ])]])
+    (for [[k v] errs]
+      ^{:key k}
+      [:tr 
+       [:td k]
+       [:td (:rule v)]
+       [:td (:severity v)]
+       [:td (clojure.string/join "/" (:path v))]])]])
 
 
 (defn display-errors [state]
-   (let [errors (:errors (:errors @state))]
-    [Table-errors errors]))
+  (let [errors (zipmap (range 1 1000) (-> @state :errors :errors))]
+    [table-errors errors]))
+
+
+(defn sys-errors [state]
+  [:div.buffer-area.tech-error
+   (str (-> @local-state :sys-err :producer-schema-err) "  "
+        (-> @local-state :sys-err :consumer-schema-err) "  "
+        (-> @local-state :sys-err :lambda-schema-err))])
 
 
 (defn home-page []
@@ -124,6 +176,6 @@
     [:div.btn [compare-button]]
     [producer-area local-state]
     [consumer-area local-state]
-    [:div.buffer-area.tech-error "@gunjan: technical errors: json validation, lambda problems will go here. area will collapse/ expand as needed. do monday (or example on reagent website + in draw-graph)"]
+    [sys-errors local-state]
     [:div.display-error [display-errors local-state]]
     ]])
