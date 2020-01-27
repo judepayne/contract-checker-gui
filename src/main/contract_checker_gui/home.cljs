@@ -66,7 +66,10 @@
 
 
 (defn put-error [err]
-  (swap! local-state assoc :sys-err err))
+  (let [err (if (vector? err)
+              (apply str err)
+              err)]
+    (swap! local-state assoc :sys-err err)))
 
 
 (defn clear-errors []
@@ -129,19 +132,19 @@
 
 (defn check-lambda-error [result]
   (if (:err result)
-    (throw (js/Error. ["Lambda error: " (:err result)]))
+    (throw  ["Lambda error: " (:err result)])
     result))
 
 
 (defn compare-contract []
   (do
     (clear-errors)
-    (->> (lambda-input (:producer-schema @local-state) (:consumer-schema @local-state))
-         (post checker-url)
+    (->> (p/promise (lambda-input (:producer-schema @local-state) (:consumer-schema @local-state)))
+         (p/map (partial post checker-url))
          (p/map json->clj)
          (p/map check-lambda-error)
          (p/map put-result)
-         (p/error (fn [error] (put-error (.-message error)))))))
+         (p/error (fn [error] (put-error error))))))
 
 
 (defn producer-area [state]
