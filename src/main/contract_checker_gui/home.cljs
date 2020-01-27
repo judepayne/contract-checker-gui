@@ -190,7 +190,7 @@
        [:td (:rule v)]
        [:td (:severity v)]
        [:td (clojure.string/join "/" (:path v))]])]])
-
+   
 
 (defn display-errors [state]
   (let [errors (zipmap (range 1 1000) (-> @state :errors :errors))]
