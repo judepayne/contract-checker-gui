@@ -104,7 +104,7 @@
      [:th "Path"]]]
    [:tbody
     (for [err errs]
-      [:tr
+        [:tr
        [:td]
        ^{:key (:rule err)} [:td (:rule err)]
        ^{:key (:severity err)} [:td (:severity err)]
