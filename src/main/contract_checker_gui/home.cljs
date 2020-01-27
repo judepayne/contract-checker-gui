@@ -15,32 +15,9 @@
 (def visualize-url "https://8ty9wnwd19.execute-api.eu-west-2.amazonaws.com/beta")
 
 
+;; Useful
 ;; Useful for debugging into the Chrome console.
 (def log (.-log js/console))
-
-
-;; State
-(def local-state
-  (atom
-   {:producer-schema ""
-    :consumer-schema ""
-    :svg "<div />"
-    :errors nil
-    :sys-err {:producer-schema-err ""
-              :consumer-schema-err ""
-              :lambda-err ""}}))
-
-(def errors-str (reaction (str (:errors @local-state))))
-
-
-(def error-paths (reaction (map :path (-> @local-state :errors :errors))))
-
-
-(defn json-data [] (str "{\"consumer\": " 
-                          (:consumer-schema @local-state)
-                          ",\"producer\": "
-                          (:producer-schema @local-state)
-                          "}"))
 
 
 (defn clj->json
@@ -58,13 +35,19 @@
   res)
 
 
-(defn parse-json
-  [js]
-  (try
-    (let [parsed (json->clj js)]
-      parsed)
-    (catch :default e
-      nil)))
+;; State
+(def local-state
+  (atom
+   {:producer-schema ""
+    :consumer-schema ""
+    :svg "<div />"
+    :errors nil
+    :sys-err ""}))
+
+(def errors-str (reaction (str (:errors @local-state))))
+
+
+(def error-paths (reaction (map :path (-> @local-state :errors :errors))))
 
 
 (defn post [url json-data]
@@ -82,44 +65,83 @@
   (swap! local-state assoc :errors result))
 
 
-(defn check-for-error [result]
-  (if (:err result)
-    (throw (js/Error. (:err result)))
-    result))
-
-
 (defn put-error [err]
-  (swap! local-state assoc-in [:sys-err :lambda-err] err))
-
-
-(defn schema-error [schema]
-  (case schema
-    :consumer (swap! local-state assoc-in [:sys-err :consumer-schema-err]
-                     "Consumer schema is not valid json!")
-    :producer (swap! local-state assoc-in [:sys-err :producer-schema-err]
-                     "Producer schema is not valid json!")))
+  (swap! local-state assoc :sys-err err))
 
 
 (defn clear-errors []
-  (swap! local-state assoc-in [:sys-err :consumer-schema-err] "")
-  (swap! local-state assoc-in [:sys-err :producer-schema-err] "")
-  (swap! local-state assoc-in [:sys-err :lambda-err] ""))
+  (swap! local-state assoc :sys-err ""))
+
+
+(defn json-data [producer-schema consumer-schema]
+  (str "{\"consumer\": " consumer-schema ",\"producer\": " producer-schema "}"))
+
+
+(defn parse-json
+  "Returns parsed json or nil if it couldn't be parsed."
+  [js]
+  (try
+    (let [parsed (json->clj js)] parsed)
+    (catch :default e nil)))
+
+
+(defn pre-parse-checks
+  [schemas]
+  (let [errors (reduce
+                (fn [acc [schema-name schema]]
+                  (if (= schema "") (conj acc [schema-name " must be specified."])
+                      acc))
+                []
+                schemas)]
+    (if (empty? errors)
+      schemas
+      (throw errors))))
+
+;; (def js "{\"$id\": \"https://example.com/person.schema.json\"}")
+
+(defn parse-checks
+  [schemas]
+  (let [parsed (map (fn [[schema-name schema]]
+                      [schema-name (parse-json schema)])
+                    schemas)
+        errors (reduce
+                (fn [acc [schema-name parsed-schema]]
+                  (if (nil? parsed-schema)
+                    (conj acc [schema-name " is not valid json."])
+                    acc))
+                []
+                parsed)]
+    (if (empty? errors)
+      schemas
+      (throw errors))))
+
+
+(defn lambda-input [ps cs]
+  (try
+    (let [checked-schemas (-> [["producer schema" ps] ["consumer schema" cs]]
+                              pre-parse-checks
+                              parse-checks)
+          input (apply json-data (map second checked-schemas))]
+      input)
+    (catch :default e
+      (put-error (apply str (interpose " :  " (map #(apply str %) e)))))))
+
+
+(defn check-lambda-error [result]
+  (if (:err result)
+    (throw (js/Error. ["Lambda error: " (:err result)]))
+    result))
 
 
 (defn compare-contract []
-  (let [cs (parse-json (:consumer-schema @local-state))
-        ps (parse-json (:producer-schema @local-state))]
-    (if (and (not (nil? cs)) (not (nil? ps)))
-      (do
-        (clear-errors)
-        (->> (post checker-url (json-data))
-             (p/map json->clj)
-             (p/map check-for-error)
-             (p/map put-result)
-             (p/error (fn [error] (put-error (.-message error))))))
-      (do
-        (if (nil? ps) (schema-error :producer))
-        (if (nil? cs) (schema-error :consumer))))))
+  (do
+    (clear-errors)
+    (->> (lambda-input (:producer-schema @local-state) (:consumer-schema @local-state))
+         (post checker-url)
+         (p/map json->clj)
+         (p/map check-lambda-error)
+         (p/map put-result)
+         (p/error (fn [error] (put-error (.-message error)))))))
 
 
 (defn producer-area [state]
@@ -174,9 +196,7 @@
 
 (defn sys-errors [state]
   [:div.buffer-area.tech-error
-   (str (-> @local-state :sys-err :producer-schema-err) "  "
-        (-> @local-state :sys-err :consumer-schema-err) "  "
-        (-> @local-state :sys-err :lambda-err))])
+   (-> @state :sys-err)])
 
 
 (defn home-page []
