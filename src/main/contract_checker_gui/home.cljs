@@ -12,17 +12,19 @@
 ;; Config section - hard codings!
 
 (def checker-url "https://8ty9wnwd19.execute-api.eu-west-2.amazonaws.com/beta")
-(def visualize-url "https://8ty9wnwd19.execute-api.eu-west-2.amazonaws.com/beta")
+(def visualize-url "https://nf45eg8r27.execute-api.eu-west-2.amazonaws.com/beta")
 
 
-;; Useful
-;; Useful for debugging into the Chrome console.
+  ;; Useful
+  ;; Useful for debugging into the Chrome console.
+
 (def log (.-log js/console))
 
 
 (defn clj->json
   [ds]
   (.stringify js/JSON (clj->js ds)))
+
 
 
 (defn json->clj
@@ -63,6 +65,7 @@
 
 (defn put-result [result]
   (swap! local-state assoc :errors result))
+
 
 
 (defn put-error [err]
@@ -140,9 +143,8 @@
   (do
     (clear-errors)
     (->> (p/promise (lambda-input (:producer-schema @local-state) (:consumer-schema @local-state)))
-         (p/map (partial post checker-url))
+         (p/map (partial post  checker-url))
          (p/map json->clj)
-         (p/map check-lambda-error)
          (p/map put-result)
          (p/error (fn [error] (put-error error))))))
 
@@ -192,14 +194,46 @@
        [:td (clojure.string/join "/" (:path v))]])]])
    
 
+(defn visualize [errs]
+  (let [paths (vector)]
+    (for [[k v] errs]
+      ^{:key k}
+      (conj paths (:path v)))))
+
+
+(defn visualize-errors [state]
+  (let [err (@state :errors)]
+    (let [err-val (get err :errors)]
+      (log (pr-str err-val))
+      (let [errs (into (sorted-map) err-val)]
+        (log (pr-str errs))))
+                                        ; (remove #{:rule} err)
+                                        ; (log (pr-str (contains? [err :errors] :rule)))
+                                        ;    (update-in err [:errors] dissoc :rule)
+    ))
+
+
+(defn viz-errors [cs errs]
+  (let [paths (visualize errs)]
+    (log (str "{\"json\":" cs ",\"option\":{\"highligh-paths\":" (into (sorted-map) paths) "}}" ))))
+
+
+(defn visualize-contract [])
+
+
+
+
 (defn display-errors [state]
   (let [errors (zipmap (range 1 1000) (-> @state :errors :errors))]
+    (viz-errors (@state :consumer-schema) errors)
     [table-errors errors]))
 
 
 (defn sys-errors [state]
   [:div.buffer-area.tech-error
    (-> @state :sys-err)])
+
+
 
 
 (defn home-page []
@@ -210,4 +244,8 @@
     [producer-area local-state]
     [consumer-area local-state]
     [sys-errors local-state]
-    [:div.display-error [display-errors local-state]]]])
+    ;[visualise-errors local-state]
+    [:div.display-error [display-errors local-state]
+     ;[visualise-errors local-state]
+     ]]])
+ 
