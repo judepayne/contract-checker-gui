@@ -7,7 +7,8 @@
    [promesa.core             :as p]
    [promesa.async-cljs       :refer-macros [async]]
    [goog.dom                 :as dom] 
-   [clojure.pprint           :as pp]))
+   [clojure.pprint           :as pp]
+   [clojure.string           :as str]))
 
 ;; Config section - hard codings!
 
@@ -32,19 +33,46 @@
   (js->clj (.parse js/JSON ds) :keywordize-keys true))
 
 
-(defn logger [prefix res]
-  (log (str prefix " " res))
-  res)
+(defn logger
+  ([prefix res]
+   (log (str prefix " " res))
+   res)
+  ([prefix transfm-fn res]
+   (log (str prefix " " (transfm-fn)))
+   res))
 
 
 ;; State
+(def default-svg-text "<svg/>")
+
+
 (def local-state
   (atom
    {:producer-schema ""
     :consumer-schema ""
-    :svg "<div/>"
+    :svg default-svg-text
     :errors nil
     :sys-err ""}))
+
+
+;; svg-pan-zoom section ------------
+(defn get-svg-element []
+  (let [svg (-> js/document (.getElementById "svg") (.-firstChild))]
+    svg))
+
+
+(defn reset-pan-zoom [] 
+  (let [svg-element (get-svg-element)]
+    (when (not (nil? svg-element))
+      (js/svgPanZoom.
+       svg-element
+       #js {:controlIconsEnabled true}))))
+
+
+(defn put-svg [data]
+  (swap! local-state assoc :svg data))
+;; end svg-pan-zoom section ------------
+
 
 (def errors-str (reaction (str (:errors @local-state))))
 
@@ -84,6 +112,12 @@
 
 (defn json-data [producer-schema consumer-schema]
   (str "{\"consumer\": " consumer-schema ",\"producer\": " producer-schema "}"))
+
+
+(defn input-for-json-viz [error-paths]
+  (str "{\"json\": " (:consumer-schema @local-state)
+       ",\"options\": " (clj->json {:highlight-paths error-paths})
+       "}"))
 
 
 (defn parse-json
@@ -144,24 +178,13 @@
 
 ;; @gunjan - new function to put the path from errors into a vector
 (defn errors->json-viz-fmt [errors]
-  ;; @gunjan - log the input to console
-  (logger "Errors for formatting" errors)
   ;; @gunjan - the vector of areas is under a key :errors, so first dig that out then
   ;; map the :path key (nb. a key is also a function) over the contents.
   (map :path (:errors errors)))
 
 
-;; @gunjan - new function to prepare input for the vis lambda
-(defn input-for-json-viz [error-paths]
-  ;; @gunjan let's make and teturn the map directly
-  {:json (:consumer-schema @local-state)
-   ;; @gunjan - we'll extend the below map to do the coloration later
-   :options {:highlight-paths error-paths}})
-
-
-;; @gunjan - new function to put the svg in the right key in the atom
-(defn put-svg [svg]
-  (swap! local-state assoc :svg svg))
+(defn clean-json [js]
+  (-> js (str/replace "\n" "") (str/replace "\t" "")))
 
 
 (defn compare-contract []
@@ -171,12 +194,9 @@
          (p/map (partial post checker-url))
          (p/map json->clj)
          (p/map put-result)
-         (p/map errors->json-viz-fmt)                ;;@gunjan - added to chain
-         (p/map input-for-json-viz)                  ;; ditto
-         (p/map clj->json)                           ;; ditto
-         (p/map (partial logger "going to send:"))   ;; temporary logging. logger fn is at top
-         (p/map (partial post visualize-url))        ;; added
-         (p/map (partial logger "output is:"))       ;; ditto
+         (p/map errors->json-viz-fmt)
+         (p/map input-for-json-viz)
+         (p/map (partial post visualize-url))
          (p/map put-svg)
          (p/error (fn [error] (put-error error))))))
 
@@ -237,9 +257,24 @@
    (-> @state :sys-err)])
 
 ;; @gunjan - new component to display svg
-(defn svg [state]
-  [:div.svg
-   {:dangerouslySetInnerHTML {:__html (:svg @state)}}])
+(defn svg-div
+  "svg component. slightly more complex as needs to reset the svg control
+   each time the svg (value) changes."
+  [state]
+
+  (create-class
+   {:component-did-mount
+    (fn [this] )
+
+    :component-did-update
+    (fn [this old-argv]
+      (reset-pan-zoom))
+
+    :reagent-render
+    (fn [_ _ _]
+      [:div#svg 
+       {:dangerouslySetInnerHTML {:__html (:svg @local-state)}}])}))
+
 
 
 (defn home-page []
@@ -250,6 +285,6 @@
     [producer-area local-state]
     [consumer-area local-state]
     [sys-errors local-state]
-    [:div.display-error [display-errors local-state]
-    [svg local-state]]]])
+    [:div.display-error [display-errors local-state]]
+    [svg-div]]])
  
