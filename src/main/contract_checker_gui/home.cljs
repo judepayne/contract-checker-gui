@@ -32,8 +32,8 @@
   (js->clj (.parse js/JSON ds) :keywordize-keys true))
 
 
-(defn logger [res]
-  (log res)
+(defn logger [prefix res]
+  (log (str prefix " " res))
   res)
 
 
@@ -42,7 +42,7 @@
   (atom
    {:producer-schema ""
     :consumer-schema ""
-    :svg "<div />"
+    :svg "<div/>"
     :errors nil
     :sys-err ""}))
 
@@ -64,8 +64,11 @@
 
 
 (defn put-result [result]
-  (swap! local-state assoc :errors result))
-
+  (swap! local-state assoc :errors result)
+  ;; @gunjan - this function *was* the last to be called in our chain in 'compare-contracts'
+  ;; now we want to extend that chain, so alter this function to return the result (errors)
+  ;; passed into it.
+  result)
 
 
 (defn put-error [err]
@@ -139,13 +142,42 @@
     result))
 
 
+;; @gunjan - new function to put the path from errors into a vector
+(defn errors->json-viz-fmt [errors]
+  ;; @gunjan - log the input to console
+  (logger "Errors for formatting" errors)
+  ;; @gunjan - the vector of areas is under a key :errors, so first dig that out then
+  ;; map the :path key (nb. a key is also a function) over the contents.
+  (map :path (:errors errors)))
+
+
+;; @gunjan - new function to prepare input for the vis lambda
+(defn input-for-json-viz [error-paths]
+  ;; @gunjan let's make and teturn the map directly
+  {:json (:consumer-schema @local-state)
+   ;; @gunjan - we'll extend the below map to do the coloration later
+   :options {:highlight-paths error-paths}})
+
+
+;; @gunjan - new function to put the svg in the right key in the atom
+(defn put-svg [svg]
+  (swap! local-state assoc :svg svg))
+
+
 (defn compare-contract []
   (do
     (clear-errors)
     (->> (p/promise (lambda-input (:producer-schema @local-state) (:consumer-schema @local-state)))
-         (p/map (partial post  checker-url))
+         (p/map (partial post checker-url))
          (p/map json->clj)
          (p/map put-result)
+         (p/map errors->json-viz-fmt)                ;;@gunjan - added to chain
+         (p/map input-for-json-viz)                  ;; ditto
+         (p/map clj->json)                           ;; ditto
+         (p/map (partial logger "going to send:"))   ;; temporary logging. logger fn is at top
+         (p/map (partial post visualize-url))        ;; added
+         (p/map (partial logger "output is:"))       ;; ditto
+         (p/map put-svg)
          (p/error (fn [error] (put-error error))))))
 
 
@@ -194,38 +226,9 @@
        [:td (clojure.string/join "/" (:path v))]])]])
    
 
-(defn visualize [errs]
-  (let [paths (vector)]
-    (for [[k v] errs]
-      ^{:key k}
-      (conj paths (:path v)))))
-
-
-(defn visualize-errors [state]
-  (let [err (@state :errors)]
-    (let [err-val (get err :errors)]
-      (log (pr-str err-val))
-      (let [errs (into (sorted-map) err-val)]
-        (log (pr-str errs))))
-                                        ; (remove #{:rule} err)
-                                        ; (log (pr-str (contains? [err :errors] :rule)))
-                                        ;    (update-in err [:errors] dissoc :rule)
-    ))
-
-
-(defn viz-errors [cs errs]
-  (let [paths (visualize errs)]
-    (log (str "{\"json\":" cs ",\"option\":{\"highligh-paths\":" (into (sorted-map) paths) "}}" ))))
-
-
-(defn visualize-contract [])
-
-
-
-
 (defn display-errors [state]
   (let [errors (zipmap (range 1 1000) (-> @state :errors :errors))]
-    (viz-errors (@state :consumer-schema) errors)
+    ;(viz-errors (@state :consumer-schema) errors)
     [table-errors errors]))
 
 
@@ -233,7 +236,10 @@
   [:div.buffer-area.tech-error
    (-> @state :sys-err)])
 
-
+;; @gunjan - new component to display svg
+(defn svg [state]
+  [:div.svg
+   {:dangerouslySetInnerHTML {:__html (:svg @state)}}])
 
 
 (defn home-page []
@@ -244,8 +250,6 @@
     [producer-area local-state]
     [consumer-area local-state]
     [sys-errors local-state]
-    ;[visualise-errors local-state]
     [:div.display-error [display-errors local-state]
-     ;[visualise-errors local-state]
-     ]]])
+    [svg local-state]]]])
  
