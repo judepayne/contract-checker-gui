@@ -54,18 +54,43 @@
     :sys-err ""}))
 
 
+(def svg (reaction (:svg @local-state)))
+
+
 ;; svg-pan-zoom section ------------
 (defn get-svg-element []
-  (let [svg (-> js/document (.getElementById "svg") (.-firstChild))]
-    svg))
+  (-> js/document (.getElementById "svg") (.-firstChild)))
+
+
+;; define an atom to hold the svg-pan-zoom ctrl itself and key settings
+(def pz-state
+  (atom
+   {:ctrl nil
+    :scale 1
+    :pan #js {:x 1 :y 1}}))
+
+
+(defn on-zoom [scale]
+  (swap! pz-state assoc :scale scale))
+
+
+(defn on-pan [pan]
+  (swap! pz-state assoc :pan pan))
 
 
 (defn reset-pan-zoom [] 
   (let [svg-element (get-svg-element)]
     (when (not (nil? svg-element))
-      (js/svgPanZoom.
-       svg-element
-       #js {:controlIconsEnabled true}))))
+      (let [spz (doto
+                    (js/svgPanZoom.
+                     svg-element
+                     #js {:controlIconsEnabled false
+                          :refreshRate 1
+                          :onZoom on-zoom
+                          :onPan on-pan})
+                  ;; initial sets could go here (e.g. resetting zoom)
+                  )]
+        (swap! pz-state assoc :ctrl spz)))))
 
 
 (defn put-svg [data]
@@ -263,7 +288,7 @@
     :reagent-render
     (fn [_ _ _]
       [:div#svg 
-       {:dangerouslySetInnerHTML {:__html (:svg @local-state)}}])}))
+       {:dangerouslySetInnerHTML {:__html @svg}}])}))
 
 
 (defn home-page []
