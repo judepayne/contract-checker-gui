@@ -51,7 +51,11 @@
     :consumer-schema ""
     :svg default-svg-text
     :errors nil
-    :sys-err ""}))
+    :sys-err ""
+    :style "tree"}))
+
+
+(def viz-styles ["tree" "uml"])
 
 
 (def svg (reaction (:svg @local-state)))
@@ -137,7 +141,8 @@
 
 (defn input-for-json-viz [error-paths]
   (str "{\"json\": " (:consumer-schema @local-state)
-       ",\"options\": " (clj->json {:highlight-paths error-paths})
+       ",\"options\": " (clj->json {:highlight-paths error-paths
+                                    :style (:style @local-state)})
        "}"))
 
 
@@ -216,6 +221,13 @@
          (p/error (fn [error] (put-error error))))))
 
 
+(defn viz-style [state options]
+  [:select
+   {:field :list :id (:style @state)
+    :on-change #(swap! state assoc :style (-> % .-target .-value))}
+   (for [x options] [:option {:key x} x])])
+
+
 (defn producer-area [state]
   [:textarea
      {:id "producer-area"
@@ -271,7 +283,6 @@
    (-> @state :sys-err)])
 
 
-;; @gunjan - new component to display svg
 (defn svg-div
   "svg component. slightly more complex as needs to reset the svg control
    each time the svg (value) changes."
@@ -295,7 +306,10 @@
   [:div.page
    [:div.wrapper
     [:div.site-banner.bnr "Contract checker"]
-    [:div.btn [compare-button]]
+    [:div.controls
+     "visualization style "
+     [viz-style local-state viz-styles]
+     [compare-button]]
     [producer-area local-state]
     [consumer-area local-state]
     [sys-errors local-state]
