@@ -145,8 +145,7 @@
                       :style (:style @local-state)}
                      (when (= "uml" (:style @local-state))
                        {:node2-options {:fillcolor "#f5f0e4"}
-                        :highlight-options {:fillcolor "#a8a3a3"}})))]
-    (log opts)
+                        :highlight-options {:fillcolor "#f5e2b8"}})))]
 
     (str "{\"json\": " (:consumer-schema @local-state)
          ",\"options\": " opts
