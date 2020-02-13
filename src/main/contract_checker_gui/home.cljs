@@ -140,10 +140,17 @@
 
 
 (defn input-for-json-viz [error-paths]
-  (str "{\"json\": " (:consumer-schema @local-state)
-       ",\"options\": " (clj->json {:highlight-paths error-paths
-                                    :style (:style @local-state)})
-       "}"))
+  (let [opts (clj->json
+              (merge {:highlight-paths error-paths
+                      :style (:style @local-state)}
+                     (when (= "uml" (:style @local-state))
+                       {:node2-options {:fillcolor "#f5f0e4"}
+                        :highlight-options {:fillcolor "#a8a3a3"}})))]
+    (log opts)
+
+    (str "{\"json\": " (:consumer-schema @local-state)
+         ",\"options\": " opts
+         "}")))
 
 
 (defn parse-json
@@ -255,6 +262,15 @@
    "Compare"])
 
 
+(defn circled-number
+  "Returns html code for the number n circled."
+  [n]
+  (let [base 9311]
+    {:dangerouslySetInnerHTML
+     {:__html
+      (str "<B>&#" (+ base n) ";</B>")}}))
+
+
 (defn table-errors [errs]
   [:table
    [:thead
@@ -265,12 +281,17 @@
      [:th "Path"]]]
    [:tbody
     (for [[k v] errs]
-      ^{:key k}
-      [:tr 
-       [:td k]
-       [:td (:rule v)]
-       [:td (:severity v)]
-       [:td (clojure.string/join "/" (:path v))]])]])
+      (let [major? (= "Major" (:severity v))]
+        ^{:key k}
+        [:tr 
+         (if major?
+           [:td.error (circled-number k)]
+           [:td.warn (circled-number k)])
+         [:td (:rule v)]
+         (if major?
+           [:td.error (:severity v)]
+           [:td.warn (:severity v)])
+         [:td (clojure.string/join "/" (:path v))]]))]])
    
 
 (defn display-errors [state]

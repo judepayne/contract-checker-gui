@@ -175,6 +175,14 @@ table, th, td {
 
 tr:nth-child(even) {background-color: #fafafa;}
 
+.error {
+  color: #db2e2e;
+}
+
+.warn {
+  color: #e08a22;
+}
+
 .wrapper {
   height: 100%;
   width: 98%;
