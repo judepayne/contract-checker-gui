@@ -145,11 +145,11 @@
                       :style (:style @local-state)}
                      (when (= "uml" (:style @local-state))
                        {:node2-options {:fillcolor "#f5f0e4"}
-                        :highlight-options {:fillcolor "#f5e2b8"}})))]
-
-    (str "{\"json\": " (:consumer-schema @local-state)
-         ",\"options\": " opts
-         "}")))
+                        :highlight-options {:fillcolor "#f5e2b8"}})))
+        out (str "{\"json\": " (:consumer-schema @local-state)
+                 ",\"options\": " opts
+                 "}")]
+    out))
 
 
 (defn parse-json
@@ -209,7 +209,7 @@
 
 
 (defn errors->json-viz-fmt [errors]
-  (map :path (:errors errors)))
+  (map #(select-keys % [:path :severity]) (:errors errors)))
 
 
 
