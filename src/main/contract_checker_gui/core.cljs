@@ -20,11 +20,11 @@
   [:div.core
    [:header]
    [page]
-   [:footer
-    [:p
-     [:span.site "contract-checker"] " is a free utility by "
-     [:a {:href "https://github.com/judepayne" :tabIndex "0"}
-      "Jude Payne & Gunjan Kothari"] "."]]])
+   (comment [:footer
+             [:p
+              [:span.site "contract-checker"] " is a free utility by "
+              [:a {:href "https://github.com/judepayne" :tabIndex "0"}
+               "Jude Payne & Gunjan Kothari"] "."]])])
 
 ;; -------------------------
 ;; Routes

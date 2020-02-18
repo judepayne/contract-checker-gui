@@ -26,7 +26,6 @@
   (.stringify js/JSON (clj->js ds)))
 
 
-
 (defn json->clj
   [ds]
   (js->clj (.parse js/JSON ds) :keywordize-keys true))
@@ -237,7 +236,7 @@
 (defn producer-area [state]
   [:textarea
      {:id "producer-area"
-      :placeholder "Paste the producer schema here"
+      :placeholder "Paste the fisrt schema here"
       :value (:producer-schema @state)
       :rows 12
       :cols 50
@@ -247,7 +246,7 @@
 (defn consumer-area [state]
   [:textarea
      {:id "consumer-area"
-      :placeholder "Paste the consumer schema here"
+      :placeholder "Paste the second schema here"
       :value (:consumer-schema @state)
       :rows 12
       :cols 50
@@ -325,7 +324,7 @@
 (defn home-page []
   [:div.page
    [:div.wrapper
-    [:div.site-banner.bnr "Contract checker"]
+    [:div.site-banner.bnr "Json schema checker"]
     [:div.controls
      "visualization style "
      [viz-style local-state viz-styles]
